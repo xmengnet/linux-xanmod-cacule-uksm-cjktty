@@ -63,7 +63,7 @@ pkgver=5.13.0
 _major=5.13
 _branch=5.x
 xanmod=2
-pkgrel=${xanmod}
+pkgrel=3
 pkgdesc='Linux Xanmod. Branch with Cacule scheduler by Hamad Marri'
 _patches_url="https://gitlab.com/sirlucjan/kernel-patches/-/raw/master/${_major}"
 url="http://www.xanmod.org/"
@@ -77,7 +77,7 @@ options=('!strip')
 _srcname="linux-${pkgver}-xanmod${xanmod}"
 
 source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${_major}.tar."{xz,sign}
-        config
+        #config
         "https://github.com/xanmod/linux/releases/download/${pkgver}-xanmod${xanmod}-cacule/patch-${pkgver}-xanmod${xanmod}-cacule.xz"
         choose-gcc-optimization.sh
         sphinx-workaround.patch
@@ -92,14 +92,15 @@ validpgpkeys=(
 )
 
 # Archlinux patches
-_commits=""
-for _patch in $_commits; do
-    source+=("${_patch}.patch::https://git.archlinux.org/linux.git/patch/?id=${_patch}")
+_commit="ec9e9a4219fe221dec93fa16fddbe44a34933d8d"
+_patches=()
+for _patch in ${_patches[@]}; do
+    source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
 b2sums=('9c4c12e2394dec064adff51f7ccdf389192eb27ba7906db5eda543afe3d04afca6b9ea0848a057571bf2534eeb98e1e3a67734deff82c0d3731be205ad995668'
         'SKIP'
-        'SKIP'
+        #'SKIP'
         'b5342310408354006a2e637a08bee0beb5e653e771f2124197cf403b9ece56d96dfb0b0732311e2b6010df7933561fdf31b980f25d27b2e8326382a2428ed96d'
         '2f0d5ddc9a1003958e8a3745cb42e47af8e7ff9961dd3d2ea070cc72444b5c63763f953b393bdd7c8a31f3ea29e8d3c86cc8647ae67bb054e22bce34af492ce1'
         '6dd7c1b3a6246c2892316cd07d0bcc5e5528955b841e900a88e48c0a6b79861034fbe66bea1d5ee610668919f5d10f688ec68aa6f4edb98d30c7f9f6241b989d'
@@ -142,16 +143,19 @@ prepare() {
                  --enable CONFIG_IKCONFIG_PROC
 
   # User set. See at the top of this file
-  if [ "$use_tracers" = "n" ]; then
-    msg2 "Disabling FUNCTION_TRACER/GRAPH_TRACER..."
-    scripts/config --disable CONFIG_FUNCTION_TRACER \
-                   --disable CONFIG_STACK_TRACER
+  if [ "$use_tracers" = "n"  ]; then
+    msg2 "Disabling FUNCTION_TRACER/GRAPH_TRACER only if we are not compiling with clang..."
+    if [ "${_compiler}" = "gcc"  ]; then
+      scripts/config --disable CONFIG_FUNCTION_TRACER \
+                     --disable CONFIG_STACK_TRACER
+    fi
   fi
 
-  if [ "$use_numa" = "n" ]; then
+  if [ "$use_numa" = "n"  ]; then
     msg2 "Disabling NUMA..."
     scripts/config --disable CONFIG_NUMA
   fi
+
 
   # Let's user choose microarchitecture optimization in GCC
   sh ${srcdir}/choose-gcc-optimization.sh $_microarchitecture
@@ -160,8 +164,23 @@ prepare() {
   # Put the file "myconfig" at the package folder to use this feature
   # If it's a full config, will be replaced
   # If not, you should use scripts/config commands, one by line
-  cp ../config .config
+  for _myconfig in "${SRCDEST}/myconfig" "${HOME}/.config/linux-xanmod/myconfig" "${XDG_CONFIG_HOME}/linux-xanmod/myconfig" ; do
+    if [ -f "${_myconfig}"  ] && [ "$(wc -l <"${_myconfig}")" -gt "0"  ]; then
+      if grep -q 'scripts/config' "${_myconfig}"; then
+        # myconfig is a partial file. Executing as a script
+        msg2 "Applying myconfig..."
+        bash -x "${_myconfig}"
+      else
 
+        # myconfig is a full config file. Replacing default .config
+        msg2 "Using user CUSTOM config..."
+        cp -f "${_myconfig}" .config
+      fi
+      echo
+      break
+    fi
+  done
+  
   make olddefconfig
 
   ### Optionally load needed modules for the make localmodconfig
