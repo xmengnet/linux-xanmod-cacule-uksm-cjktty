@@ -4,10 +4,10 @@ jobs:
   build_for_arch:
     runs-on: ubuntu-latest
     steps:
-      - name: Build linux-ck-uksm for arch
+      - name: Build linux-xanmod-cacule-uksm-cjktty for arch
         uses: antman666/build-aur-action@mine
         with:
-          repo-name: linux-ck1-uksm
+          repo-name: linux-xanmod-cacule-uksm-cjktty
       - uses: ncipollo/release-action@v1.8.6
         with:
           allowUpdates: true
