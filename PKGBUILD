@@ -59,7 +59,7 @@ if [ -z ${_localmodcfg} ]; then
 fi
 
 # Tweak kernel options prior to a build via nconfig
-_makenconfig=y
+_makenconfig=
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
@@ -68,7 +68,7 @@ pkgver=5.13.0
 _major=5.13
 _branch=5.x
 xanmod=2
-pkgrel=3
+pkgrel=4
 pkgdesc='Linux Xanmod. Branch with Cacule scheduler by Hamad Marri'
 _patches_url="https://gitlab.com/sirlucjan/kernel-patches/-/raw/master/${_major}"
 url="http://www.xanmod.org/"
