@@ -86,7 +86,7 @@ fi
 options=('!strip')
 _srcname="linux-${pkgver}-xanmod${xanmod}"
 
-source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${pkgver}.tar."{xz,sign}
+source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${_major}.tar."{xz,sign}
         "https://github.com/xanmod/linux/releases/download/${pkgver}-xanmod${xanmod}-cacule/patch-${pkgver}-xanmod${xanmod}-cacule.xz"
         choose-gcc-optimization.sh
         "0001-cjktty.patch::${_patches_url}/cjktty-patches/0001-cjktty-${_major}-initial-import-from-https-github.com-zhm.patch"
@@ -104,7 +104,7 @@ for _patch in $_commits; do
     source+=("${_patch}.patch::https://git.archlinux.org/linux.git/patch/?id=${_patch}")
 done
 
-b2sums=('dc08c82affae0cd7ceac841d568b796fad9b325da0aad046000a08df911b38732da89263f9d2835be8463469e884fff31f1742f7223c602d3e01db826660c7bf'
+b2sums=('9c4c12e2394dec064adff51f7ccdf389192eb27ba7906db5eda543afe3d04afca6b9ea0848a057571bf2534eeb98e1e3a67734deff82c0d3731be205ad995668'
         'SKIP'
         'dfe6af628db994e3e2c691b4e270953257027084f649bb7bb338db999104a9fde7e92263cfeaa933bce8e7bbcd0b37fb11e411e16d6fedb9236645f7f3741780'
         '2f0d5ddc9a1003958e8a3745cb42e47af8e7ff9961dd3d2ea070cc72444b5c63763f953b393bdd7c8a31f3ea29e8d3c86cc8647ae67bb054e22bce34af492ce1'
@@ -118,15 +118,15 @@ export KBUILD_BUILD_TIMESTAMP=${KBUILD_BUILD_TIMESTAMP:-$(date -Ru${SOURCE_DATE_
 
 prepare() {
 
-  cd linux-${pkgver}
+  cd linux-${_major}
 
   msg2 "Apply Xanmod patch"
-  patch -Np1 -i ../patch-${pkgver}-xanmod${xanmod}-cacule
+  xz -d < ../patch-${pkgver}-xanmod${xanmod}-cacule.xz | patch -Np1
 
   msg2 "Setting version..."
   scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
-  # echo "${pkgbase#linux-xanmod}" > localversion
+  echo "${pkgbase#linux-xanmod}" > localversion
 
   # Archlinux patches
   local src
@@ -167,7 +167,7 @@ prepare() {
   # Put the file "myconfig" at the package folder to use this feature
   # If it's a full config, will be replaced
   # If not, you should use scripts/config commands, one by line
-  for _myconfig in "${SRCDEST}/config" "${HOME}/.config/linux-xanmod/myconfig" "${XDG_CONFIG_HOME}/linux-xanmod/myconfig" ; do
+  for _myconfig in "${SRCDEST}/myconfig" "${HOME}/.config/linux-xanmod/myconfig" "${XDG_CONFIG_HOME}/linux-xanmod/myconfig" ; do
     if [ -f "${_myconfig}" ] && [ "$(wc -l <"${_myconfig}")" -gt "0" ]; then
       if grep -q 'scripts/config' "${_myconfig}"; then
         # myconfig is a partial file. Executing as a script
@@ -208,7 +208,7 @@ prepare() {
 
 build() {
   cd linux-${_major}
-  make LLVM=$_LLVM LLVM_IAS=$_LLVM -j40 all
+  make LLVM=$_LLVM LLVM_IAS=$_LLVM all
 }
 
 _package() {
