@@ -64,11 +64,11 @@ _makenconfig=
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 pkgbase=linux-xanmod-cacule-uksm-cjktty
-pkgver=5.13.0
+pkgver=5.13.1
 _major=5.13
 _branch=5.x
-xanmod=2
-pkgrel=4
+xanmod=1
+pkgrel=1
 pkgdesc='Linux Xanmod. Branch with Cacule scheduler by Hamad Marri'
 _patches_url="https://gitlab.com/sirlucjan/kernel-patches/-/raw/master/${_major}"
 url="http://www.xanmod.org/"
@@ -86,8 +86,7 @@ fi
 options=('!strip')
 _srcname="linux-${pkgver}-xanmod${xanmod}"
 
-source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${_major}.tar."{xz,sign}
-        #config
+source=("https://cdn.kernel.org/pub/linux/kernel/v${_branch}/linux-${pkgver}.tar."{xz,sign}
         "https://github.com/xanmod/linux/releases/download/${pkgver}-xanmod${xanmod}-cacule/patch-${pkgver}-xanmod${xanmod}-cacule.xz"
         choose-gcc-optimization.sh
         "0001-cjktty.patch::${_patches_url}/cjktty-patches/0001-cjktty-${_major}-initial-import-from-https-github.com-zhm.patch"
@@ -105,10 +104,9 @@ for _patch in $_commits; do
     source+=("${_patch}.patch::https://git.archlinux.org/linux.git/patch/?id=${_patch}")
 done
 
-b2sums=('9c4c12e2394dec064adff51f7ccdf389192eb27ba7906db5eda543afe3d04afca6b9ea0848a057571bf2534eeb98e1e3a67734deff82c0d3731be205ad995668'
+b2sums=('dc08c82affae0cd7ceac841d568b796fad9b325da0aad046000a08df911b38732da89263f9d2835be8463469e884fff31f1742f7223c602d3e01db826660c7bf'
         'SKIP'
-        #'SKIP'
-        'b5342310408354006a2e637a08bee0beb5e653e771f2124197cf403b9ece56d96dfb0b0732311e2b6010df7933561fdf31b980f25d27b2e8326382a2428ed96d'
+        'dfe6af628db994e3e2c691b4e270953257027084f649bb7bb338db999104a9fde7e92263cfeaa933bce8e7bbcd0b37fb11e411e16d6fedb9236645f7f3741780'
         '2f0d5ddc9a1003958e8a3745cb42e47af8e7ff9961dd3d2ea070cc72444b5c63763f953b393bdd7c8a31f3ea29e8d3c86cc8647ae67bb054e22bce34af492ce1'
         'cb72248c2226b5c1a39422d9d9a79a4f9331c965a888185f421619185231a290d74e273c2323ab2c9340adfb269259825da781af423674abfbc9be909db0cc35'
         '066e1d2cf209eed973957b00eebe3cbcce37b77e9ab0ef115da0aa6984ac6dea1b5d43fedd6e87dbda042b620a7684eae6c36a739f7a49e0f96ebd41867947f4'
