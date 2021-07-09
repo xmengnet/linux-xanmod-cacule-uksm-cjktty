@@ -121,12 +121,12 @@ prepare() {
   cd linux-${pkgver}
 
   msg2 "Apply Xanmod patch"
-  xz -d < ../patch-${pkgver}-xanmod${xanmod}-cacule.xz | patch -Np1
+  patch -Np1 -i ../patch-${pkgver}-xanmod${xanmod}-cacule
 
   msg2 "Setting version..."
   scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
-  echo "${pkgbase#linux-xanmod}" > localversion
+  # echo "${pkgbase#linux-xanmod}" > localversion
 
   # Archlinux patches
   local src
