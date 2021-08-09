@@ -11,6 +11,6 @@ jobs:
       - uses: ncipollo/release-action@v1.8.6
         with:
           allowUpdates: true
-          tag: "linux-5.13.8-xanmod-uksm-cjktty-1_for_arch"
+          tag: "linux-5.13.9-xanmod-uksm-cjktty-1_for_arch"
           artifacts: "./*/*.zst"
           token: ${{ secrets.GITHUB_TOKEN }}

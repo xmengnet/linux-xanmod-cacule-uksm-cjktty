@@ -19,7 +19,7 @@
 ## Default is: 0 => generic
 ## Good option if your package is for one machine: 98 => Intel native
 ##                                                 99 => AMD native
-## I choose generic, you can change it by yourself
+## Here chooses generic, if you want better performance, please install from AUR
 if [ -z ${_microarchitecture+x} ]; then
   _microarchitecture=0
 fi
@@ -28,7 +28,6 @@ fi
 ## Archlinux and Xanmod enable it by default.
 ## Set variable "use_numa" to: n to disable (possibly increase performance)
 ##                             y to enable  (stock default)
-## Here keeps default is ok
 if [ -z ${use_numa+x} ]; then
   use_numa=y
 fi
@@ -71,7 +70,7 @@ _makenconfig=
 
 pkgbase=linux-xanmod-cacule-uksm-cjktty
 _major=5.13
-pkgver=${_major}.8
+pkgver=${_major}.9
 _branch=5.x
 xanmod=1
 pkgrel=${xanmod}
@@ -79,7 +78,6 @@ pkgdesc='Linux Xanmod. Branch with Cacule scheduler by Hamad Marri'
 _patches_url="https://gitlab.com/sirlucjan/kernel-patches/-/raw/master/${_major}"
 url="http://www.xanmod.org/"
 arch=(x86_64)
-
 license=(GPL2)
 makedepends=(
   xmlto kmod inetutils bc libelf cpio
@@ -114,7 +112,7 @@ done
 
 b2sums=('9c4c12e2394dec064adff51f7ccdf389192eb27ba7906db5eda543afe3d04afca6b9ea0848a057571bf2534eeb98e1e3a67734deff82c0d3731be205ad995668'
         'SKIP'
-        '42275338efa96260802a4b0890a05f7173bdb3e7a48bd1087b818756e8ce9db385e158d43634d2654e2724968d025c1d5d3c348769438fe049942c3224558ea3'
+        '84ffe0f182d73a501342ff6b5d0b150bf6a9d58f1e409607f57dfb4aadfe7edab3f05dce244a927193428a67359472fb3419da75489f6cfe8e76177c2f57e9e2'
         '610a717e50339b45573dfd0b00da20ef3797053d93a5116673756f8644fbd4fbca9e82587225ebb94a5c51b0e5f1b92329d515c8c60466b41c6845ed06a7405a'
         'cb72248c2226b5c1a39422d9d9a79a4f9331c965a888185f421619185231a290d74e273c2323ab2c9340adfb269259825da781af423674abfbc9be909db0cc35'
         '066e1d2cf209eed973957b00eebe3cbcce37b77e9ab0ef115da0aa6984ac6dea1b5d43fedd6e87dbda042b620a7684eae6c36a739f7a49e0f96ebd41867947f4'
@@ -202,7 +200,7 @@ prepare() {
   scripts/config --disable CONFIG_MQ_IOSCHED_DEADLINE
   scripts/config --disable CONFIG_MQ_IOSCHED_KYBER
   scripts/config --module CONFIG_EXT4_FS
-  scripts/config --set-val CONFIG_KERNEL_ZSTD_LEVEL 15
+  scripts/config --set-val CONFIG_KERNEL_ZSTD_LEVEL 13
   scripts/config --enable CONFIG_KERNEL_ZSTD_LEVEL_ULTRA
   scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
   scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_SIZE
@@ -263,6 +261,7 @@ prepare() {
     fi
   fi
   
+  msg2 "Applying default config..."
   make LLVM=$_LLVM LLVM_IAS=$_LLVM olddefconfig
 
   make -s kernelrelease > version
