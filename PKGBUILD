@@ -70,7 +70,7 @@ _makenconfig=
 
 pkgbase=linux-xanmod-cacule-uksm-cjktty
 _major=5.13
-pkgver=${_major}.10
+pkgver=${_major}.11
 _branch=5.x
 xanmod=1
 pkgrel=${xanmod}
