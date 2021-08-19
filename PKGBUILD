@@ -205,8 +205,8 @@ prepare() {
   scripts/config --module CONFIG_EXT4_FS
   scripts/config --set-val CONFIG_KERNEL_ZSTD_LEVEL 13
   scripts/config --enable CONFIG_KERNEL_ZSTD_LEVEL_ULTRA
-  scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
   scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
+  scripts/config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 
   msg2 "Change cpu freq into schedutil"
   scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
