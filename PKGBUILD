@@ -42,7 +42,7 @@ fi
 
 ## Choose between GCC and CLANG config (default is GCC)
 if [ -z ${_compiler+x} ]; then
-  _compiler=gcc
+  _compiler=clang
 fi
 
 ## Setting some security options
@@ -85,6 +85,7 @@ makedepends=(
 
 if [ "${_compiler}" = "clang" ]; then
   makedepends+=(clang llvm lld python)
+  _LLVM=1
 fi
 
 options=('!strip')
