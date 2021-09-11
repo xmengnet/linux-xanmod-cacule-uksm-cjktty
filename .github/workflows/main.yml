@@ -1,3 +1,4 @@
+#start
 name: Github Action Build PKGBUILD
 on: push
 jobs:
